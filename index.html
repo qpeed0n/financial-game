@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#071b16" />
+    <title>Капитал — игра по финансовой грамотности</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="grain"></div>
+      <header class="site-header">
+        <a class="brand" href="#" aria-label="Капитал">
+          <span class="brand-mark">₽</span>
+          <span>
+            <strong>КАПИТАЛ</strong>
+          </span>
+        </a>
+      </header>
+
+      <main>
+        <section class="screen setup-screen active" id="setupScreen">
+          <div class="setup-copy">
+            <h1>Учимся думать,<br /><em>как инвесторы.</em></h1>
+            <p class="lead">Командная игра для пары: 3 раунда, 18 категорий и решения, которые меняют счёт.</p>
+          </div>
+
+          <div class="setup-card">
+            <h2>Соберите команды</h2>
+            <div class="field-group">
+              <label for="teamCount">Количество команд</label>
+              <div class="count-control">
+                <button class="icon-button" type="button" id="decreaseTeams" aria-label="Уменьшить количество команд">−</button>
+                <output id="teamCountValue">3</output>
+                <button class="icon-button" type="button" id="increaseTeams" aria-label="Увеличить количество команд">+</button>
+              </div>
+              <input type="range" min="2" max="4" value="3" id="teamCount" aria-label="Количество команд" />
+            </div>
+            <div class="team-fields" id="teamFields"></div>
+            <button class="primary-button" id="startGame" type="button"><span>Начать игру</span><span class="button-arrow">↗</span></button>
+          </div>
+        </section>
+
+        <section class="screen lobby-screen" id="lobbyScreen">
+          <div class="page-intro">
+            <h1>Все готовы<br /><em>к игре?</em></h1>
+          </div>
+          <div class="lobby-panel">
+            <div class="lobby-teams" id="lobbyTeams"></div>
+            <button class="primary-button" id="lobbyStartRound" type="button"><span>К раунду 1</span><span class="button-arrow">↗</span></button>
+          </div>
+        </section>
+
+        <section class="screen game-screen" id="gameScreen">
+          <div class="game-topbar">
+            <div>
+              <h1>Инвестиции <span class="slash">/</span> <span id="roundTitle">Раунд 1</span></h1>
+            </div>
+            <div class="game-actions">
+              <button class="ghost-button" id="restartGame" type="button">↺ <span>Новая игра</span></button>
+            </div>
+          </div>
+
+          <div class="round-tabs" role="tablist" aria-label="Раунды">
+            <button class="round-tab active" role="tab" aria-selected="true" data-round="0"><span>Раунд 01</span><small>100 — 500</small></button>
+            <button class="round-tab" role="tab" aria-selected="false" data-round="1"><span>Раунд 02</span><small>600 — 1 000</small></button>
+            <button class="round-tab" role="tab" aria-selected="false" data-round="2"><span>Раунд 03</span><small>1 100 — 1 500</small></button>
+          </div>
+
+          <div class="scoreboard" id="scoreboard"></div>
+
+          <div class="board-heading">
+            <div><p>Категории раунда <span id="roundNumber">01</span></p></div>
+          </div>
+          <div class="game-board" id="gameBoard"></div>
+        </section>
+
+        <section class="screen results-screen" id="resultsScreen">
+          <div class="page-intro">
+            <h1>Итоги<br /><em>игры.</em></h1>
+          </div>
+          <div class="results-panel">
+            <div class="results-list" id="resultsList"></div>
+            <button class="primary-button" id="resultsNewGame" type="button"><span>Начать новую игру</span><span class="button-arrow">↗</span></button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="questionModal" aria-hidden="true">
+      <div class="question-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" id="closeModal" type="button" aria-label="Закрыть">×</button>
+        <div class="question-page-inner">
+          <div class="modal-topline"><span id="modalCategory">Категория</span><span id="modalPoints">100 баллов</span></div>
+          <div class="question-layout">
+            <div class="question-copy">
+              <div class="event-banner" id="eventBanner" hidden></div>
+              <h2 id="modalTitle">Вопрос</h2>
+              <p class="question-text" id="questionText"></p>
+              <div class="answer-box" id="answerBox" hidden><span>Ответ</span><p id="answerText"></p></div>
+            </div>
+            <div class="question-actions">
+              <div class="timer-pill" id="timerPill"><span class="timer-icon">◷</span><span id="timerLabel">30</span><small>сек</small></div>
+              <div class="modal-controls">
+                <div class="select-wrap"><label for="awardTeam">Кому начислить баллы?</label><select id="awardTeam"></select></div>
+                <div class="score-adjust"><label for="scoreInput">Баллы</label><input type="number" id="scoreInput" min="-1500" max="3000" step="50" /></div>
+              </div>
+              <div class="modal-actions">
+                <button class="secondary-button" id="showAnswer" type="button">Показать ответ</button>
+                <button class="primary-button" id="awardPoints" type="button"><span>Засчитать баллы</span><span class="button-arrow">↗</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
